@@ -72,7 +72,7 @@ function hlsLoad(stream) {
     hls.loadSource(playlist.streams[0]);
     hls.attachMedia(video);
     hls.on(Hls.Events.MANIFEST_PARSED, function () {
-      video.play();
+      MediaController.mediaReady = true;
     });
   } else {
     initApp();
