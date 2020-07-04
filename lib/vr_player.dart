@@ -52,9 +52,9 @@ class MediaEvent {
 
 abstract class VRPlayerObserver {
   void subscribeTo(List<int> event);
-  void unsubscribeFrom(List<int> event);
-  void subscribeToAll();
-  void unSubscribeFromAll();
+  void unSubscribeFrom(List<int> event);
+  void subscribeToAllEvents();
+  void unSubscribeFromAllEvents();
   void onEvent(int event, VoidCallback callback);
   void triggerCallback(EventMessage message);
 }
@@ -182,19 +182,19 @@ class VRPlayerController extends VRPlayerObserver {
   }
 
   @override
-  void subscribeToAll() {
+  void subscribeToAllEvents() {
     const jscr = "mediaController.subscribeToAllEvents();";
     _frameController.evaluateJavascript(source: jscr);
   }
 
   @override
-  void unSubscribeFromAll() {
+  void unSubscribeFromAllEvents() {
     const jscr = "mediaController.unSubscribeFromAllEvents();";
     _frameController.evaluateJavascript(source: jscr);
   }
 
   @override
-  void unsubscribeFrom(List<int> mediaEvents) {
+  void unSubscribeFrom(List<int> mediaEvents) {
     final events = _getEvents(mediaEvents);
     final jscr = "mediaController.unsubscribe($events);";
     _frameController.evaluateJavascript(source: jscr);
@@ -321,5 +321,11 @@ class _VRPlayerState extends State<VRPlayer> {
     if (widget.debugMode) {
       print("VR PLAYER: " + consoleMessage.message);
     }
+  }
+
+  @override
+  void dispose() {
+    widget.controller?.unSubscribeFromAllEvents();
+    super.dispose();
   }
 }
