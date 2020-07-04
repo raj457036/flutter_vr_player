@@ -16,7 +16,8 @@ dependencies:
     sdk: flutter
 
   vr_player:
-    git: // this project git url
+    git:
+      url: https://github.com/raj457036/flutter_vr_player.git
 
 ...
 ```
