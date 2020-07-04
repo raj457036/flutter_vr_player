@@ -11,8 +11,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  webview_flutter:
   flutter_inappwebview:
 
 flutter:
