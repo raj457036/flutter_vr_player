@@ -8,7 +8,7 @@ VR player is based on [WebView VR Player](https://github.com/raj457036/webview_v
 
 #### 1. Add `vr_player` to `pubspec.yaml`
 
-```dart
+```yaml
 ...
 
 dependencies:
