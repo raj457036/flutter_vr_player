@@ -42,7 +42,11 @@
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>NSAppTransportSecurity</key>
-	<key>NSAllowsLocalNetworking</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 </dict>
 </plist>
