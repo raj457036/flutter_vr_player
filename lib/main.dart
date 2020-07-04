@@ -6,7 +6,7 @@ import 'package:vr_player/vr_player.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await VRPlayer.initializeVRPlayer();
+  // await VRPlayer.initializeVRPlayer();
   runApp(new MyApp());
 }
 
@@ -16,12 +16,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  VRPlayerController controller;
+  WebVRPlayerController controller;
 
   @override
   void initState() {
     super.initState();
-    controller = VRPlayerController(
+    controller = WebVRPlayerController(
       mediaUrl:
           "https://video.felixsmart.com:9443/live/_definst_/40A36BC4C907/playlist.m3u8?token=06f98ebc-983e-48a2-bb03-7d6f16a25fd3",
       onReady: () {
@@ -55,7 +55,7 @@ class _MyAppState extends State<MyApp> {
                 0.272, 0.534, 0.131, 0, 0, //
                 0, 0, 0, 1, 0, //
               ]),
-              child: VRPlayer(
+              child: WebVRPlayer(
                 controller: controller,
                 // autoPlay: false,
                 debugMode: true,
