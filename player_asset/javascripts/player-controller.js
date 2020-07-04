@@ -328,12 +328,17 @@ class MediaController {
         init(true);
     }
 
-    load(url) {
+    load(url, autoPlay = false) {
         this.pause();
         this.currentTime(0);
         playlist.streams[0] = url;
         init(true);
 
+        if (autoPlay) {
+            this.play();
+        } else {
+            this.pause();
+        }
     }
 
     enterVRMode() {
@@ -415,25 +420,27 @@ function processParams() {
     if (url !== null) {
         playlist.streams[0] = url;
         init(true)
+
+        if (autoPlay !== 'false') {
+            mediaController.play();
+        } else {
+            mediaController.pause();
+        }
+
+        if (loop === 'true') {
+            mediaController.video.loop = true;
+        }
+
+        if (VRBtn === 'false') {
+            var h = document.getElementsByTagName('head').item(0);
+            var s = document.createElement("style");
+            s.type = "text/css";
+            s.appendChild(document.createTextNode(".a-enter-vr-button {display: none;}"));
+            h.appendChild(s);
+        }
     }
 
-    if (autoPlay !== 'false') {
-        mediaController.play();
-    } else {
-        mediaController.pause();
-    }
 
-    if (loop === 'true') {
-        mediaController.video.loop = true;
-    }
-
-    if (VRBtn === 'false') {
-        var h = document.getElementsByTagName('head').item(0);
-        var s = document.createElement("style");
-        s.type = "text/css";
-        s.appendChild(document.createTextNode(".a-enter-vr-button {display: none;}"));
-        h.appendChild(s);
-    }
 
 }
 

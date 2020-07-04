@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
 
+  flutter_webview:
   flutter_inappwebview:
 
 flutter:
@@ -21,4 +22,3 @@ flutter:
     - player_asset/
     - player_asset/javascripts/
     - player_asset/stylesheets/
-  #

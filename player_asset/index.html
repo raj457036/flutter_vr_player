@@ -10,7 +10,6 @@
     <script src="javascripts/jquery.min.js"></script>
     <script src="javascripts/aframe-video-controls.min.js"></script>
     <script src="javascripts/hls.min.js"></script>
-    <script src="javascripts/main.js"></script>
     <script src="javascripts/shaka-player.compiled.js"></script>
     <script src="javascripts/shaka-loader.js"></script>
     <script src="javascripts/touch-support.js"></script>
@@ -26,7 +25,8 @@
         <a-scene embedded>
             <a-entity camera="user-height: 1.6;" touch-look-controls></a-entity>
             <a-assets>
-                <video id="video_player_id" src="#" autoplay playsinline webkit-playsinline preload='auto'></video>
+                <video id="video_player_id" autoplay playsinline webkit-playsinline preload='auto'
+                    crossorigin="anonymous"></video>
             </a-assets>
             <a-videosphere src="#video_player_id" width="16" height="9" position="0 0 0">
             </a-videosphere>
