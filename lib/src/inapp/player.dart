@@ -210,6 +210,8 @@ class _VRPlayerState extends State<VRPlayer> {
         crossPlatform: InAppWebViewOptions(
           debuggingEnabled: widget.debugMode,
           mediaPlaybackRequiresUserGesture: false,
+          supportZoom: false,
+          transparentBackground: true,
         ),
       ),
       gestureRecognizers: widget.gestureRecognizers,
