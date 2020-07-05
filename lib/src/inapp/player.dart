@@ -264,8 +264,10 @@ class _VRPlayerState extends State<VRPlayer> {
   }
 
   void _onLoadStop(InAppWebViewController controller, String url) async {
-    final jsrc =
-        "MediaMessageChannel.postMessage = (msg) => window.flutter_inappwebview.callHandler('mediaEventMessage', msg);";
+    final jsrc = """setTimeout(
+              function() { 
+                MediaMessageChannel.postMessage = (msg) => window.flutter_inappwebview.callHandler('mediaEventMessage', msg);; 
+              }, 1000);""";
     await webView.evaluateJavascript(source: jsrc);
     widget.controller._onReady();
   }

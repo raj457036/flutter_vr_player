@@ -1,37 +1,44 @@
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
-    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
 
-    <title>WEB VIEW 360 Player</title>
+    <title>360 VR Player</title>
     <script src="javascripts/aframe.min.js"></script>
     <script src="javascripts/jquery.min.js"></script>
-    <script src="javascripts/aframe-video-controls.min.js"></script>
+    <!-- <script src="javascripts/aframe-video-controls.min.js"></script> -->
     <script src="javascripts/hls.min.js"></script>
-    <script src="javascripts/shaka-player.compiled.js"></script>
+    <script src="javascripts/shaka-player.compiled.min.js"></script>
     <script src="javascripts/shaka-loader.js"></script>
     <script src="javascripts/touch-support.js"></script>
     <script src="javascripts/player-controller.js"></script>
-    <link rel="stylesheet" href="stylesheets/style.css">
-</head>
+    <link rel="stylesheet" href="stylesheets/style.css" />
+  </head>
 
-<body>
-
-    <div class="frame-holder">
-
-        <!-- Player -->
-        <a-scene embedded>
-            <a-entity camera="user-height: 1.6;" touch-look-controls></a-entity>
-            <a-assets>
-                <video id="video_player_id" autoplay playsinline webkit-playsinline preload='auto'
-                    crossorigin="anonymous"></video>
-            </a-assets>
-            <a-videosphere src="#video_player_id" width="16" height="9" position="0 0 0">
-            </a-videosphere>
-        </a-scene>
-    </div>
-</body>
-
+  <body>
+    <a-scene
+      loading-screen="dotsColor: white; backgroundColor: black"
+      vr-mode-ui="enabled: true"
+    >
+      <a-entity camera="user-height: 1.6;" touch-look-controls></a-entity>
+      <a-assets>
+        <video
+          id="video_player_id"
+          autoplay
+          playsinline
+          webkit-playsinline
+          preload="auto"
+          crossorigin="anonymous"
+        ></video>
+      </a-assets>
+      <a-videosphere
+        src="#video_player_id"
+        width="16"
+        height="9"
+        position="0 0 0"
+      >
+      </a-videosphere>
+    </a-scene>
+  </body>
 </html>
