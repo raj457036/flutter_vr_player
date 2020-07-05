@@ -245,10 +245,8 @@ class _WebVRPlayerState extends State<WebVRPlayer> {
   }
 
   void _onLoadStop(String _) async {
-    print(
-        'sdfahdjhsdjkfhksjdh fskfdhskjf hkjsda hahsfjk haklsh fkla hskjfhklah fklja hskhfskahfklh\n\n\n\n\n\n\n\n\n\n\n');
     final jsrc =
-        "MediaMessageChannel.postMessage = (msg) => MsgChannel.postMessage(msg);";
+        "MediaMessageChannel.postMessage = function(msg) { MsgChannel.postMessage(msg); }";
     await webView.evaluateJavascript(jsrc);
     widget.controller._onReady();
   }
