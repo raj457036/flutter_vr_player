@@ -295,29 +295,35 @@ class MediaController {
 
     play() {
         this.video.play();
+        return "";
     }
 
     seek(by_time) {
         this.currentTime(this.currentTime() + by_time);
+        return "";
     }
 
     currentTime(time) {
         if (time < this.duration && time > 0) {
             this.video.currentTime = time;
+            return "";
         } else return this.video.currentTime;
     }
 
     play() {
         this.video.play();
+        return "";
     }
 
     pause() {
         this.video.pause();
+        return "";
     }
 
     playbackRate(rate) {
         if (rate < 5 && rate > -1) {
             this.video.playbackRate = rate;
+            return "";
         } else return this.video.playbackRate;
     }
 
@@ -326,6 +332,7 @@ class MediaController {
         this.pause();
         this.currentTime(0);
         init(true);
+        return "";
     }
 
     load(url, autoPlay = false) {
@@ -339,16 +346,19 @@ class MediaController {
         } else {
             this.pause();
         }
+        return "";
     }
 
     enterVRMode() {
         const scene = $("a-scene")[0];
         scene.enterVR();
+        return "";
     }
 
     exitVRMode() {
         const scene = $("a-scene")[0];
         scene.exitVR();
+        return "";
     }
 
     subscribeToAllEvents() {
@@ -357,6 +367,7 @@ class MediaController {
         for (var code of codes) {
             this.channel.subscribe(code);
         }
+        return "";
     }
 
     unSubscribeFromAllEvents() {
@@ -365,18 +376,21 @@ class MediaController {
         for (var code of codes) {
             this.channel.unsubscribe(code);
         }
+        return "";
     }
 
     subscribe(...codes) {
         for (var code of codes) {
             this.channel.subscribe(code);
         }
+        return "";
     }
 
     unsubscribe(...codes) {
         for (var code of codes) {
             this.channel.unsubscribe(code);
         }
+        return "";
     }
 
     // getters
