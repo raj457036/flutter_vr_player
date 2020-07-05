@@ -275,10 +275,4 @@ class _VRPlayerState extends State<VRPlayer> {
       print("VR PLAYER: " + consoleMessage.message);
     }
   }
-
-  @override
-  void dispose() {
-    widget.controller?.unSubscribeFromAllEvents();
-    super.dispose();
-  }
 }

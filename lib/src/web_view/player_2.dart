@@ -252,10 +252,4 @@ class _WebVRPlayerState extends State<WebVRPlayer> {
     await webView.evaluateJavascript(jsrc);
     widget.controller._onReady();
   }
-
-  @override
-  void dispose() {
-    widget.controller?.unSubscribeFromAllEvents();
-    super.dispose();
-  }
 }
