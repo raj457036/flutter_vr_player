@@ -10,16 +10,17 @@
     <!-- <script src="javascripts/aframe-video-controls.min.js"></script> -->
     <script src="javascripts/hls.min.js"></script>
     <script src="javascripts/shaka-player.compiled.min.js"></script>
-    <script src="javascripts/shaka-loader.js"></script>
-    <script src="javascripts/touch-support.js"></script>
-    <script src="javascripts/player-controller.js"></script>
-    <link rel="stylesheet" href="stylesheets/style.css" />
+    <script src="javascripts/shaka-loader.min.js"></script>
+    <script src="javascripts/touch-support.min.js"></script>
+    <script src="javascripts/player-controller.min.js"></script>
+    <link rel="stylesheet" href="stylesheets/style.min.css" />
   </head>
 
   <body>
     <a-scene
       loading-screen="dotsColor: white; backgroundColor: black"
       vr-mode-ui="enabled: true"
+      ar-mode-ui="enabled: false"
     >
       <a-entity camera="user-height: 1.6;" touch-look-controls></a-entity>
       <a-assets>

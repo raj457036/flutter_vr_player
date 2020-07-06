@@ -213,6 +213,11 @@ class _VRPlayerState extends State<VRPlayer> {
           supportZoom: false,
           transparentBackground: true,
         ),
+        ios: IOSInAppWebViewOptions(
+          allowsInlineMediaPlayback: true,
+          enableViewportScale: true,
+          allowsLinkPreview: false,
+        ),
       ),
       gestureRecognizers: widget.gestureRecognizers,
       onWebViewCreated: _onWebViewCreated,
