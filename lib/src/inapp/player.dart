@@ -207,11 +207,15 @@ class _VRPlayerState extends State<VRPlayer> {
       initialUrl: _buildInitalUrl(),
       initialHeaders: {},
       initialOptions: InAppWebViewGroupOptions(
-        crossPlatform: InAppWebViewOptions(
-          debuggingEnabled: widget.debugMode,
-          mediaPlaybackRequiresUserGesture: false,
-        ),
-      ),
+          crossPlatform: InAppWebViewOptions(
+            debuggingEnabled: widget.debugMode,
+            mediaPlaybackRequiresUserGesture: false,
+          ),
+          ios: IOSInAppWebViewOptions(
+            allowsInlineMediaPlayback: true,
+            enableViewportScale: true,
+            allowsLinkPreview: false,
+          )),
       gestureRecognizers: widget.gestureRecognizers,
       onWebViewCreated: _onWebViewCreated,
       onLoadStart: _onLoadStart,
