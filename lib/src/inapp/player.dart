@@ -173,6 +173,7 @@ class VRPlayer extends StatefulWidget {
   final bool debugMode;
   final bool showVRBtn;
   final bool autoPlay;
+  final bool live;
   final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
 
   const VRPlayer({
@@ -183,6 +184,7 @@ class VRPlayer extends StatefulWidget {
     this.debugMode = false,
     this.showVRBtn = false,
     this.autoPlay = true,
+    this.live = false,
     this.gestureRecognizers,
   })  : assert(controller != null),
         assert(debugMode != null),
@@ -233,8 +235,13 @@ class _VRPlayerState extends State<VRPlayer> {
   }
 
   String _buildInitalUrl() {
-    String base =
-        "http://localhost:$__vrPlayerProviderPort/player_asset/index.html?";
+    String base;
+    if (widget.live) {
+      base = "https://raj457036.github.io/webview_vr_player?";
+    } else {
+      base =
+          "http://localhost:$__vrPlayerProviderPort/player_asset/index.html?";
+    }
 
     final mediaLink = widget.controller.mediaLink;
     if (mediaLink != null) {
