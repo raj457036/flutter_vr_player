@@ -85,6 +85,13 @@ class VRPlayerController extends VRPlayerObserver {
     _frameController.evaluateJavascript(source: jscr);
   }
 
+  genFilter(double brightness, double contrast, double hueRot, double sepia,
+      double saturation) {
+    final jscr =
+        "mediaFilter.filter($brightness, $contrast, $hueRot, $sepia, $saturation);";
+    _frameController.evaluateJavascript(source: jscr);
+  }
+
   // methods
   setLoop(bool value) {
     final jscr = "mediaController.video.loop = $value;";
