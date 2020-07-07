@@ -32,12 +32,19 @@ class VRPlayerController extends VRPlayerObserver {
 
   // media filters
 
+  /// Warning: Filters only work if [VRPlayer] is `live`,
+  /// i.e [VRPlayer.live] is set to `true`
+  ///
+  /// builds a balance color filter for media playback
   buildBalanceFilter(double strength, int red, int green, int blue) {
     final jscr =
         "mediaFilter.buildBalanceFilter($strength, $red, $green, $blue)";
     _frameController.evaluateJavascript(source: jscr);
   }
 
+  /// Warning: Filters only work if VRPlayer is `live`,
+  /// i.e [VRPlayer.live] is set to `true`
+  ///
   /// use [MediaFilters] for filterCodes
   ///
   /// available codes
