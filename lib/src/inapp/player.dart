@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:vr_player/src/inapp/media_filters.dart';
+import 'media_filters.dart';
 
 import '../event_message.dart';
 import '../vr_player_controller.dart';
