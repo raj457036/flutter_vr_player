@@ -36,9 +36,9 @@ class VRPlayerController extends VRPlayerObserver {
   /// i.e [VRPlayer.live] is set to `true`
   ///
   /// builds a balance color filter for media playback
-  buildBalanceFilter(double strength, int red, int green, int blue) {
+  buildBalanceFilter(int strength, int red, int green, int blue) {
     final jscr =
-        "mediaFilter.buildBalanceFilter($strength, $red, $green, $blue)";
+        "mediaFilter.buildBalanceFilter($strength, $red, $green, $blue);";
     _frameController.evaluateJavascript(source: jscr);
   }
 
@@ -81,7 +81,7 @@ class VRPlayerController extends VRPlayerObserver {
   /// Balance filter trys to reduce unwanted color from the media
   /// like removing blue light.
   applyFilter(String filterCode) {
-    final jscr = "mediaFilter.applyFilter($filterCode);";
+    final jscr = "mediaFilter.applyFilter('$filterCode');";
     _frameController.evaluateJavascript(source: jscr);
   }
 
