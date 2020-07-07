@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:vr_player/src/inapp/media_filters.dart';
 
 import '../event_message.dart';
 import '../vr_player_controller.dart';
@@ -27,6 +28,54 @@ class VRPlayerController extends VRPlayerObserver {
     if (onReady != null) {
       onReady();
     }
+  }
+
+  // media filters
+
+  buildBalanceFilter(double strength, int red, int green, int blue) {
+    final jscr =
+        "mediaFilter.buildBalanceFilter($strength, $red, $green, $blue)";
+    _frameController.evaluateJavascript(source: jscr);
+  }
+
+  /// use [MediaFilters] for filterCodes
+  ///
+  /// available codes
+  /// - NoFilter
+  /// - F1977
+  /// - Aden
+  /// - Brannan
+  /// - Brooklyn
+  /// - Clarendon
+  /// - Earlybird
+  /// - Gingham
+  /// - Hudson
+  /// - Inkwell
+  /// - Kelvin
+  /// - Lark
+  /// - LoFi
+  /// - Maven
+  /// - Mayfair
+  /// - Moon
+  /// - Nashville
+  /// - Perpetua
+  /// - Reyes
+  /// - Rise
+  /// - Slumber
+  /// - Stinson
+  /// - Toaster
+  /// - Valencia
+  /// - Walden
+  /// - Willow
+  /// - XproII
+  /// - Balance
+  ///
+  /// Note: change balance with `buildBalanceFilter`
+  /// Balance filter trys to reduce unwanted color from the media
+  /// like removing blue light.
+  applyFilter(String filterCode) {
+    final jscr = "mediaFilter.applyFilter($filterCode);";
+    _frameController.evaluateJavascript(source: jscr);
   }
 
   // methods
@@ -217,6 +266,7 @@ class _VRPlayerState extends State<VRPlayer> {
           allowsInlineMediaPlayback: true,
           enableViewportScale: true,
           allowsLinkPreview: false,
+          allowsPictureInPictureMediaPlayback: false,
         ),
       ),
       gestureRecognizers: widget.gestureRecognizers,
