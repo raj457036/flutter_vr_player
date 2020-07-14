@@ -15,8 +15,3 @@ dependencies:
 
 flutter:
   uses-material-design: true
-
-  assets:
-    - player_asset/
-    - player_asset/javascripts/
-    - player_asset/stylesheets/

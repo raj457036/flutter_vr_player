@@ -9,9 +9,7 @@ import 'media_filters.dart';
 import '../event_message.dart';
 import '../vr_player_controller.dart';
 
-const int __vrPlayerProviderPort = 8015;
-final InAppLocalhostServer __vrPlayerProvider =
-    InAppLocalhostServer(port: __vrPlayerProviderPort);
+String _playerBaseUrl = "https://raj457036.github.io/webview_vr_player/?";
 
 class VRPlayerController extends VRPlayerObserver {
   String _mediaUrl;
@@ -236,7 +234,6 @@ class VRPlayer extends StatefulWidget {
   final bool debugMode;
   final bool showVRBtn;
   final bool autoPlay;
-  final bool live;
   final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
 
   const VRPlayer({
@@ -247,7 +244,6 @@ class VRPlayer extends StatefulWidget {
     this.debugMode = false,
     this.showVRBtn = false,
     this.autoPlay = true,
-    this.live = false,
     this.gestureRecognizers,
   })  : assert(controller != null),
         assert(debugMode != null),
@@ -255,8 +251,8 @@ class VRPlayer extends StatefulWidget {
         assert(autoPlay != null),
         super(key: key);
 
-  static initializeVRPlayer() async {
-    await __vrPlayerProvider.start();
+  static void changePlayerHost(String playerURL) {
+    _playerBaseUrl = playerURL;
   }
 
   @override
@@ -299,13 +295,7 @@ class _VRPlayerState extends State<VRPlayer> {
   }
 
   String _buildInitalUrl() {
-    String base;
-    if (widget.live) {
-      base = "https://raj457036.github.io/webview_vr_player?";
-    } else {
-      base =
-          "http://localhost:$__vrPlayerProviderPort/player_asset/index.html?";
-    }
+    String base = _playerBaseUrl;
 
     final mediaLink = widget.controller.mediaLink;
     if (mediaLink != null) {
