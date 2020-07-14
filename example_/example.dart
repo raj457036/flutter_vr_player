@@ -6,7 +6,6 @@ import 'package:vr_player/vr_player.dart';
 
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await VRPlayer.initializeVRPlayer();
   runApp(new MyApp());
 }
 

@@ -1,0 +1,30 @@
+class MediaFilters {
+  static const String NoFilter = "";
+  static const String F1977 = "_1977";
+  static const String Aden = "aden";
+  static const String Brannan = "brannan";
+  static const String Brooklyn = "brooklyn";
+  static const String Clarendon = "clarendon";
+  static const String Earlybird = "earlybird";
+  static const String Gingham = "gingham";
+  static const String Hudson = "hudson";
+  static const String Inkwell = "inkwell";
+  static const String Kelvin = "kelvin";
+  static const String Lark = "lark";
+  static const String LoFi = "lofi";
+  static const String Maven = "maven";
+  static const String Mayfair = "mayfair";
+  static const String Moon = "moon";
+  static const String Nashville = "nashville";
+  static const String Perpetua = "perpetua";
+  static const String Reyes = "reyes";
+  static const String Rise = "rise";
+  static const String Slumber = "slumber";
+  static const String Stinson = "stinson";
+  static const String Toaster = "toaster";
+  static const String Valencia = "valencia";
+  static const String Walden = "walden";
+  static const String Willow = "willow";
+  static const String XproII = "xpro2";
+  static const String Balance = "balance";
+}
