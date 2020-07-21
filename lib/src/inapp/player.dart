@@ -308,7 +308,7 @@ class _VRPlayerState extends State<VRPlayer> {
       base += "autoPlay=false&";
     }
 
-    if (!widget.debugMode) {
+    if (widget.debugMode) {
       base += "debug=true&";
     }
     return base;
