@@ -144,6 +144,11 @@ class VRPlayerController extends VRPlayerObserver {
 
   // getters
 
+  Future<bool> get isFlat async {
+    final jscr = "mediaController.isFlat;";
+    return await _frameController.evaluateJavascript(source: jscr) as bool;
+  }
+
   String get mediaLink => _mediaUrl;
 
   Future<num> get currentTime async {
@@ -186,6 +191,16 @@ class VRPlayerController extends VRPlayerObserver {
   String _getEvents(List<int> mediaEvents) {
     final events = mediaEvents.map((e) => e.toString()).join(',');
     return events;
+  }
+
+  void switchToFlatView({bool fullScreen = false}) {
+    final jscr = "mediaController.viewInFlat($fullScreen);";
+    _frameController.evaluateJavascript(source: jscr);
+  }
+
+  void switchToMonoView() {
+    final jscr = "mediaController.viewInMono();";
+    _frameController.evaluateJavascript(source: jscr);
   }
 
   @override
