@@ -1,32 +1,31 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'media_filters.dart';
 
 import '../event_message.dart';
 import '../vr_player_controller.dart';
 
-String _playerBaseUrl = "https://raj457036.github.io/webview_vr_player/?";
+String _playerBaseUrl = "https://raj457036.github.io/webview_vr_player/Dev/?";
 
 class VRPlayerController extends VRPlayerObserver {
   String _mediaUrl;
 
   Map<int, VoidCallback> _eventMap = {};
 
-  InAppWebViewController _frameController;
-  final VoidCallback onReady;
+  WebViewController _frameController;
+  final VoidCallback _onReady;
+  final VoidCallback _onCreate;
 
-  VRPlayerController({this.onReady, @required String mediaUrl})
-      : _mediaUrl = mediaUrl;
-
-  void _onReady() {
-    if (onReady != null) {
-      onReady();
-    }
-  }
+  VRPlayerController(
+      {VoidCallback onReady, VoidCallback onCreate, @required String mediaUrl})
+      : _mediaUrl = mediaUrl,
+        _onCreate = onCreate,
+        _onReady = onReady;
 
   // media filters
 
@@ -37,7 +36,7 @@ class VRPlayerController extends VRPlayerObserver {
   buildBalanceFilter(int strength, int red, int green, int blue) {
     final jscr =
         "mediaFilter.buildBalanceFilter($strength, $red, $green, $blue);";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   /// Warning: Filters only work if VRPlayer is `live`,
@@ -80,110 +79,110 @@ class VRPlayerController extends VRPlayerObserver {
   /// like removing blue light.
   applyFilter(String filterCode) {
     final jscr = "mediaFilter.applyFilter('$filterCode');";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   genFilter(double sepia, double saturation, double brightness, double contrast,
       double hueRot) {
     final jscr =
         "mediaFilter.filter($sepia, $saturation, $brightness, $contrast, $hueRot);";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   // methods
   setLoop(bool value) {
     final jscr = "mediaController.video.loop = $value;";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   play() {
     final jscr = "mediaController.play();";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   pause() {
     final jscr = "mediaController.pause();";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   seek(num byTime) {
     final jscr = "mediaController.seek($byTime);";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   Future<void> setCurrentTime(double setTime) async {
     final jscr = "mediaController.currentTime($setTime);";
-    await _frameController.evaluateJavascript(source: jscr);
+    await _frameController.evaluateJavascript(jscr);
   }
 
   Future<void> setPlaybackRate(int rate) async {
     final jscr = "mediaController.playbackRate($rate);";
-    await _frameController.evaluateJavascript(source: jscr);
+    await _frameController.evaluateJavascript(jscr);
   }
 
   Future<void> forceReplay(int rate) async {
     final jscr = "mediaController.forceReplay();";
-    await _frameController.evaluateJavascript(source: jscr);
+    await _frameController.evaluateJavascript(jscr);
   }
 
   Future<void> changeMedia(String url, {bool autoPlay = false}) async {
     final jscr = "mediaController.load('$url', $autoPlay);";
-    await _frameController.evaluateJavascript(source: jscr);
+    await _frameController.evaluateJavascript(jscr);
     _mediaUrl = url;
   }
 
   enterVRMode() {
     final jscr = "mediaController.enterVRMode();";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   exitVRMode() {
     final jscr = "mediaController.exitVRMode();";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   // getters
 
   Future<bool> get isFlat async {
     final jscr = "mediaController.isFlat;";
-    return await _frameController.evaluateJavascript(source: jscr) as bool;
+    return await _frameController.evaluateJavascript(jscr) as bool;
   }
 
   String get mediaLink => _mediaUrl;
 
   Future<num> get currentTime async {
     final jscr = "mediaController.currentTime();";
-    return await _frameController.evaluateJavascript(source: jscr) as num;
+    return await _frameController.evaluateJavascript(jscr) as num;
   }
 
   Future<num> get playbackRate async {
     final jscr = "mediaController.playbackRate();";
-    return await _frameController.evaluateJavascript(source: jscr) as num;
+    return await _frameController.evaluateJavascript(jscr) as num;
   }
 
   int get readyState {
     final jscr = "mediaController.state;";
-    return _frameController.evaluateJavascript(source: jscr) as int;
+    return _frameController.evaluateJavascript(jscr) as int;
   }
 
   bool get isPaused {
     final jscr = "mediaController.paused;";
-    return _frameController.evaluateJavascript(source: jscr) as bool;
+    return _frameController.evaluateJavascript(jscr) as bool;
   }
 
   num get duration {
     final jscr = "mediaController.duration;";
-    return _frameController.evaluateJavascript(source: jscr) as num;
+    return _frameController.evaluateJavascript(jscr) as num;
   }
 
   num get volume {
     final jscr = "mediaController.volume;";
-    return _frameController.evaluateJavascript(source: jscr) as num;
+    return _frameController.evaluateJavascript(jscr) as num;
   }
 
   bool get isMuted {
     final jscr = "mediaController.isMuted;";
-    return _frameController.evaluateJavascript(source: jscr) as bool;
+    return _frameController.evaluateJavascript(jscr) as bool;
   }
 
   // Event Management
@@ -195,38 +194,38 @@ class VRPlayerController extends VRPlayerObserver {
 
   void switchToFlatView({bool fullScreen = false}) {
     final jscr = "mediaController.viewInFlat($fullScreen);";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   void switchToMonoView() {
     final jscr = "mediaController.viewInMono();";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   @override
   void subscribeTo(List<int> mediaEvents) {
     final events = _getEvents(mediaEvents);
     final jscr = "mediaController.subscribe($events);";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   @override
   void subscribeToAllEvents() {
     const jscr = "mediaController.subscribeToAllEvents();";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   @override
   void unSubscribeFromAllEvents() {
     const jscr = "mediaController.unSubscribeFromAllEvents();";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   @override
   void unSubscribeFrom(List<int> mediaEvents) {
     final events = _getEvents(mediaEvents);
     final jscr = "mediaController.unsubscribe($events);";
-    _frameController.evaluateJavascript(source: jscr);
+    _frameController.evaluateJavascript(jscr);
   }
 
   @override
@@ -275,37 +274,59 @@ class VRPlayer extends StatefulWidget {
 }
 
 class _VRPlayerState extends State<VRPlayer> {
-  InAppWebViewController webView;
+  WebViewController webView;
+
+  @override
+  void initState() {
+    super.initState();
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return InAppWebView(
+    return WebView(
       initialUrl: _buildInitalUrl(),
-      initialHeaders: {},
-      initialOptions: InAppWebViewGroupOptions(
-        crossPlatform: InAppWebViewOptions(
-          debuggingEnabled: widget.debugMode,
-          mediaPlaybackRequiresUserGesture: false,
-          transparentBackground: true,
-        ),
-        ios: IOSInAppWebViewOptions(
-          allowsInlineMediaPlayback: true,
-          enableViewportScale: true,
-          allowsLinkPreview: false,
-          allowsPictureInPictureMediaPlayback: false,
-          disallowOverScroll: true,
-        ),
-      ),
+      // initialHeaders: {},
+      gestureNavigationEnabled: false,
+      initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
+      // initialOptions: InAppWebViewGroupOptions(
+      //   crossPlatform: InAppWebViewOptions(
+      //     debuggingEnabled: widget.debugMode,
+      //     mediaPlaybackRequiresUserGesture: false,
+      //     transparentBackground: true,
+      //   ),
+      //   ios: IOSInAppWebViewOptions(
+      //     allowsInlineMediaPlayback: true,
+      //     enableViewportScale: true,
+      //     allowsLinkPreview: false,
+      //     allowsPictureInPictureMediaPlayback: false,
+      //     disallowOverScroll: true,
+      //   ),
+      // ),
+
       gestureRecognizers: widget.gestureRecognizers,
-      onWebViewCreated: _onWebViewCreated,
-      onLoadStart: _onLoadStart,
-      onLoadStop: _onLoadStop,
-      onProgressChanged: _onProgressChange,
-      onConsoleMessage: _onConsoleMessage,
+      // onWebViewCreated: _onWebViewCreated,
+      javascriptMode: JavascriptMode.unrestricted,
+      onWebViewCreated: (_) {
+        setState(() {
+          webView = _;
+          widget.controller._frameController = _;
+        });
+        _.clearCache();
+        if (widget.controller._onCreate != null) widget.controller._onCreate();
+      },
+      // onLoadStart: _onLoadStart,
+      // onLoadStop: _onLoadStop,
+      // onProgressChanged: _onProgressChange,
+      // onConsoleMessage: _onConsoleMessage,
+      onPageStarted: _onLoadStart,
+      onPageFinished: _onLoadStop,
+      debuggingEnabled: widget.debugMode,
+      javascriptChannels: getJsChannels(),
     );
   }
 
-  void _onLoadStart(InAppWebViewController controller, String url) {
+  void _onLoadStart(String url) {
     if (widget.onPlayerInit != null) {
       widget.onPlayerInit();
     }
@@ -331,37 +352,50 @@ class _VRPlayerState extends State<VRPlayer> {
     return base;
   }
 
-  void _onWebViewCreated(InAppWebViewController controller) {
-    webView = controller;
-    widget.controller._frameController = controller;
-    webView.addJavaScriptHandler(
-      handlerName: 'mediaEventMessage',
-      callback: (result) {
-        final _parsedMsg = json.decode(result.first);
-        final EventMessage message = EventMessage.fromJson(_parsedMsg);
-        widget.controller.triggerCallback(message);
-      },
-    );
+  Set<JavascriptChannel> getJsChannels() {
+    return [
+      JavascriptChannel(
+        name: "MediaEventMessage",
+        onMessageReceived: (result) {
+          final _parsedMsg = json.decode(result.message);
+          final EventMessage message = EventMessage.fromJson(_parsedMsg);
+          widget.controller.triggerCallback(message);
+        },
+      ),
+    ].toSet();
   }
 
-  void _onProgressChange(InAppWebViewController controller, int progress) {
-    if (widget.onPlayerLoading != null) {
-      widget.onPlayerLoading(progress);
-    }
-  }
+  // void _onWebViewCreated(InAppWebViewController controller) {
+  //   webView = controller;
+  //   widget.controller._frameController = controller;
+  //   webView.addJavaScriptHandler(
+  //     handlerName: 'mediaEventMessage',
+  //     callback: (result) {
+  //       final _parsedMsg = json.decode(result.first);
+  //       final EventMessage message = EventMessage.fromJson(_parsedMsg);
+  //       widget.controller.triggerCallback(message);
+  //     },
+  //   );
+  // }
 
-  void _onLoadStop(InAppWebViewController controller, String url) async {
+  // void _onProgressChange(InAppWebViewController controller, int progress) {
+  //   if (widget.onPlayerLoading != null) {
+  //     widget.onPlayerLoading(progress);
+  //   }
+  // }
+
+  void _onLoadStop(String url) async {
     final jsrc = """setTimeout(
               function() { 
-                MediaMessageChannel.postMessage = (msg) => window.flutter_inappwebview.callHandler('mediaEventMessage', msg);; 
+                MediaMessageChannel.postMessage = MediaEventMessage.postMessage; 
               }, 1000);""";
-    await webView.evaluateJavascript(source: jsrc);
-    widget.controller._onReady();
+    await webView.evaluateJavascript(jsrc);
+    if (widget.controller._onReady != null) widget.controller._onReady();
   }
 
-  void _onConsoleMessage(controller, consoleMessage) {
-    if (widget.debugMode) {
-      print("VR PLAYER: " + consoleMessage.message);
-    }
-  }
+  // void _onConsoleMessage(controller, consoleMessage) {
+  //   if (widget.debugMode) {
+  //     print("VR PLAYER: " + consoleMessage.message);
+  //   }
+  // }
 }
