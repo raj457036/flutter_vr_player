@@ -27,11 +27,12 @@ class _MyAppState extends State<MyApp> {
           final progress = await controller.currentTime;
           print("Progressed: $progress");
         });
-        Future.delayed(Duration(seconds: 10), () {
-          controller.applyFilter(MediaFilters.Moon);
-        });
       },
     );
+
+    Future.delayed(Duration(seconds: 10), () {
+      controller.applyFilter(MediaFilters.Moon);
+    });
   }
 
   @override
@@ -43,6 +44,7 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        backgroundColor: Colors.black,
         appBar: AppBar(
           title: const Text('WebView Example'),
         ),

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:device_info/device_info.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -275,55 +276,72 @@ class VRPlayer extends StatefulWidget {
 
 class _VRPlayerState extends State<VRPlayer> {
   WebViewController webView;
-
+  bool _ready = false;
   @override
   void initState() {
     super.initState();
-    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    setPlatformSpecs();
+  }
+
+  setPlatformSpecs() async {
+    if (Platform.isAndroid) {
+      final deviceInfo = await DeviceInfoPlugin().androidInfo;
+      if (deviceInfo.version.sdkInt >= 29)
+        WebView.platform = SurfaceAndroidWebView();
+    }
+
+    setState(() {
+      _ready = true;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return WebView(
-      initialUrl: _buildInitalUrl(),
-      // initialHeaders: {},
-      gestureNavigationEnabled: false,
-      initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
-      // initialOptions: InAppWebViewGroupOptions(
-      //   crossPlatform: InAppWebViewOptions(
-      //     debuggingEnabled: widget.debugMode,
-      //     mediaPlaybackRequiresUserGesture: false,
-      //     transparentBackground: true,
-      //   ),
-      //   ios: IOSInAppWebViewOptions(
-      //     allowsInlineMediaPlayback: true,
-      //     enableViewportScale: true,
-      //     allowsLinkPreview: false,
-      //     allowsPictureInPictureMediaPlayback: false,
-      //     disallowOverScroll: true,
-      //   ),
-      // ),
+    return !_ready
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : WebView(
+            initialUrl: _buildInitalUrl(),
+            // initialHeaders: {},
+            gestureNavigationEnabled: false,
+            initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
+            // initialOptions: InAppWebViewGroupOptions(
+            //   crossPlatform: InAppWebViewOptions(
+            //     debuggingEnabled: widget.debugMode,
+            //     mediaPlaybackRequiresUserGesture: false,
+            //     transparentBackground: true,
+            //   ),
+            //   ios: IOSInAppWebViewOptions(
+            //     allowsInlineMediaPlayback: true,
+            //     enableViewportScale: true,
+            //     allowsLinkPreview: false,
+            //     allowsPictureInPictureMediaPlayback: false,
+            //     disallowOverScroll: true,
+            //   ),
+            // ),
 
-      gestureRecognizers: widget.gestureRecognizers,
-      // onWebViewCreated: _onWebViewCreated,
-      javascriptMode: JavascriptMode.unrestricted,
-      onWebViewCreated: (_) {
-        setState(() {
-          webView = _;
-          widget.controller._frameController = _;
-        });
-        _.clearCache();
-        if (widget.controller._onCreate != null) widget.controller._onCreate();
-      },
-      // onLoadStart: _onLoadStart,
-      // onLoadStop: _onLoadStop,
-      // onProgressChanged: _onProgressChange,
-      // onConsoleMessage: _onConsoleMessage,
-      onPageStarted: _onLoadStart,
-      onPageFinished: _onLoadStop,
-      debuggingEnabled: widget.debugMode,
-      javascriptChannels: getJsChannels(),
-    );
+            gestureRecognizers: widget.gestureRecognizers,
+            // onWebViewCreated: _onWebViewCreated,
+            javascriptMode: JavascriptMode.unrestricted,
+            onWebViewCreated: (_) {
+              setState(() {
+                webView = _;
+                widget.controller._frameController = _;
+              });
+              _.clearCache();
+              if (widget.controller._onCreate != null)
+                widget.controller._onCreate();
+            },
+            // onLoadStart: _onLoadStart,
+            // onLoadStop: _onLoadStop,
+            // onProgressChanged: _onProgressChange,
+            // onConsoleMessage: _onConsoleMessage,
+            onPageStarted: _onLoadStart,
+            onPageFinished: _onLoadStop,
+            debuggingEnabled: widget.debugMode,
+            javascriptChannels: getJsChannels(),
+          );
   }
 
   void _onLoadStart(String url) {
