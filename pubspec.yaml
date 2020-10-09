@@ -12,6 +12,7 @@ dependencies:
   flutter:
     sdk: flutter
   webview_flutter: ^1.0.1
+  device_info: ^0.4.2+8
 
 flutter:
   uses-material-design: true
