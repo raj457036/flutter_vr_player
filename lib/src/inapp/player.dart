@@ -20,8 +20,10 @@ class VRPlayerController extends VRPlayerObserver {
 
   InAppWebViewController _frameController;
   final VoidCallback onReady;
+  final VoidCallback onBuild;
 
-  VRPlayerController({this.onReady, String mediaUrl}) : _mediaUrl = mediaUrl;
+  VRPlayerController({this.onReady, this.onBuild, String mediaUrl})
+      : _mediaUrl = mediaUrl;
 
   void _onReady() {
     if (onReady != null) {
@@ -131,14 +133,17 @@ class VRPlayerController extends VRPlayerObserver {
     final jscr =
         "buildPlayer($_url, vr_btn = $vrButton, auto_play = $autoPlay, loop = $loop, debug = $debug, muted = $muted, debug_console = false, ios_perm = $askIosMotionPermission);";
     await _frameController.evaluateJavascript(source: jscr);
+    onBuild();
   }
 
   Future<void> setEventListener() async {
     final jsrc = """setTimeout(
               function() { 
-                MediaMessageChannel.postMessage = (msg) => window.flutter_inappwebview.callHandler('$_eventHandler', msg);; 
+                MediaMessageC hannel.postMessage = (msg) => window.flutter_inappwebview.callHandler('$_eventHandler', msg);; 
               }, 1000);""";
     await _frameController.evaluateJavascript(source: jsrc);
+
+    if (_mediaUrl != null) _onReady();
   }
 
   Future<void> setCurrentTime(double setTime) async {
@@ -383,7 +388,6 @@ class _VRPlayerState extends State<VRPlayer> {
 
   void _onLoadStop(InAppWebViewController controller, String url) async {
     await widget.controller.setEventListener();
-    widget.controller._onReady();
   }
 
   void _onConsoleMessage(controller, consoleMessage) {
