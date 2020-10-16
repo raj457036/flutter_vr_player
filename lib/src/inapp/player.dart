@@ -15,6 +15,13 @@ const _eventHandler = "mediaEventMessage";
 
 class VRPlayerController extends VRPlayerObserver {
   String _mediaUrl;
+  final bool vrButton;
+  final bool autoPlay;
+  final bool loop;
+  final bool debug;
+  final bool console;
+  final bool muted;
+  final bool askIosMotionPermission;
 
   Map<int, VoidCallback> _eventMap = {};
 
@@ -22,8 +29,27 @@ class VRPlayerController extends VRPlayerObserver {
   final VoidCallback onReady;
   final VoidCallback onBuild;
 
-  VRPlayerController({this.onReady, this.onBuild, String mediaUrl})
-      : _mediaUrl = mediaUrl;
+  VRPlayerController({
+    this.onReady,
+    this.onBuild,
+    String mediaUrl,
+    this.vrButton = false,
+    this.autoPlay = true,
+    this.loop = false,
+    this.debug = false,
+    this.console = false,
+    this.muted = true,
+    this.askIosMotionPermission = false,
+  })  : assert(
+          vrButton != null &&
+              autoPlay != null &&
+              loop != null &&
+              debug != null &&
+              console != null &&
+              muted != null &&
+              askIosMotionPermission != null,
+        ),
+        _mediaUrl = mediaUrl;
 
   void _onReady() {
     if (onReady != null) {
@@ -118,20 +144,30 @@ class VRPlayerController extends VRPlayerObserver {
 
   Future<void> buildPlayer({
     String url,
-    bool vrButton = false,
-    autoPlay = true,
-    loop = false,
-    debug = false,
-    muted = true,
-    askIosMotionPermission = false,
+    bool enableVrButton,
+    bool enableAutoPlay,
+    bool enableLoop,
+    bool enableDebug,
+    bool enableConsole,
+    bool enableMuted,
+    bool enableAskIosMotionPermission,
   }) async {
     assert((url ?? _mediaUrl) != null,
         "Cannot build player without an actual url.");
 
-    final _url = url ?? _mediaUrl;
+    final String _url = url ?? _mediaUrl;
+    final bool _vrButton = enableVrButton ?? vrButton,
+        _autoPlay = enableAutoPlay ?? autoPlay,
+        _loop = enableLoop ?? loop,
+        _debug = enableDebug ?? debug,
+        _console = enableConsole ?? console,
+        _muted = enableMuted ?? muted,
+        _askIosMotionPermission =
+            enableAskIosMotionPermission ?? askIosMotionPermission;
 
     final jscr =
-        "buildPlayer($_url, vr_btn = $vrButton, auto_play = $autoPlay, loop = $loop, debug = $debug, muted = $muted, debug_console = false, ios_perm = $askIosMotionPermission);";
+        "buildPlayer(url='$_url', vr_btn = $_vrButton, auto_play = $_autoPlay," +
+            " loop = $_loop, debug = $_debug, muted = $_muted, debug_console = $_console, ios_perm = $_askIosMotionPermission);";
     await _frameController.evaluateJavascript(source: jscr);
     onBuild();
   }
@@ -139,11 +175,9 @@ class VRPlayerController extends VRPlayerObserver {
   Future<void> setEventListener() async {
     final jsrc = """setTimeout(
               function() { 
-                MediaMessageC hannel.postMessage = (msg) => window.flutter_inappwebview.callHandler('$_eventHandler', msg);; 
+                MediaMessageChannel.postMessage = (msg) => window.flutter_inappwebview.callHandler('$_eventHandler', msg);
               }, 1000);""";
     await _frameController.evaluateJavascript(source: jsrc);
-
-    if (_mediaUrl != null) _onReady();
   }
 
   Future<void> setCurrentTime(double setTime) async {
@@ -281,9 +315,6 @@ class VRPlayer extends StatefulWidget {
   final VRPlayerController controller;
   final Function(int) onPlayerLoading;
   final Function() onPlayerInit;
-  final bool debugMode;
-  final bool showVRBtn;
-  final bool autoPlay;
   final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
 
   const VRPlayer({
@@ -291,14 +322,8 @@ class VRPlayer extends StatefulWidget {
     @required this.controller,
     this.onPlayerLoading,
     this.onPlayerInit,
-    this.debugMode = false,
-    this.showVRBtn = false,
-    this.autoPlay = true,
     this.gestureRecognizers,
   })  : assert(controller != null),
-        assert(debugMode != null),
-        assert(showVRBtn != null),
-        assert(autoPlay != null),
         super(key: key);
 
   static void changePlayerHost(String playerURL) {
@@ -319,9 +344,12 @@ class _VRPlayerState extends State<VRPlayer> {
       initialHeaders: {},
       initialOptions: InAppWebViewGroupOptions(
         crossPlatform: InAppWebViewOptions(
-          debuggingEnabled: widget.debugMode,
+          debuggingEnabled: widget.controller.debug,
           mediaPlaybackRequiresUserGesture: false,
           transparentBackground: true,
+          disableContextMenu: true,
+          supportZoom: false,
+          incognito: true,
         ),
         ios: IOSInAppWebViewOptions(
           allowsInlineMediaPlayback: true,
@@ -354,14 +382,14 @@ class _VRPlayerState extends State<VRPlayer> {
     if (mediaLink != null) {
       base += "video=$mediaLink&";
     }
-    if (!widget.showVRBtn) {
+    if (!widget.controller.vrButton) {
       base += "VRBtn=false&";
     }
-    if (!widget.autoPlay) {
+    if (!widget.controller.autoPlay) {
       base += "autoPlay=false&";
     }
 
-    if (widget.debugMode) {
+    if (widget.controller.debug) {
       base += "debug=true&";
     }
     return base;
@@ -388,10 +416,11 @@ class _VRPlayerState extends State<VRPlayer> {
 
   void _onLoadStop(InAppWebViewController controller, String url) async {
     await widget.controller.setEventListener();
+    widget.controller._onReady();
   }
 
   void _onConsoleMessage(controller, consoleMessage) {
-    if (widget.debugMode) {
+    if (widget.controller.debug) {
       print("VR PLAYER: " + consoleMessage.message);
     }
   }
