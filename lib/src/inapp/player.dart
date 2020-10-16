@@ -15,18 +15,37 @@ const _eventHandler = "mediaEventMessage";
 
 class VRPlayerController extends VRPlayerObserver {
   String _mediaUrl;
+
+  /// vr toggle button on bottom right corner
   final bool vrButton;
+
+  /// auto play video when player loads the media
   final bool autoPlay;
+
+  /// play video in loop
   final bool loop;
+
+  /// enable debugging
   final bool debug;
+
+  /// create an interactive console over the player
   final bool console;
+
+  /// mute the media by default
   final bool muted;
+
+  /// ask for motion permssion on ios devices for sterioscopic view
   final bool askIosMotionPermission;
 
   Map<int, VoidCallback> _eventMap = {};
 
   InAppWebViewController _frameController;
+
+  /// triggers when player preprocesses are completed
   final VoidCallback onReady;
+
+  /// triggers when player is build
+  /// tip: subscribe to events here.
   final VoidCallback onBuild;
 
   VRPlayerController({
