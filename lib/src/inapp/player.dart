@@ -281,15 +281,18 @@ class VRPlayerController extends VRPlayerObserver {
     return events;
   }
 
-  void switchToFlatView({bool fullScreen = false, bool fillMode = false}) {
+  Future<dynamic> switchToFlatView(
+      {bool fullScreen = false, bool fillMode = false}) async {
     final jscr =
         "mediaController.togglePlayer(true, ${fullScreen ? 1 : 0}, $fillMode);";
-    _frameController.evaluateJavascript(source: jscr);
+    final _ = await _frameController.evaluateJavascript(source: jscr);
+    return _;
   }
 
-  void switchToMonoView() {
+  Future<dynamic> switchToMonoView() async {
     final jscr = "mediaController.togglePlayer(false, 0, false);";
-    _frameController.evaluateJavascript(source: jscr);
+    final _ = await _frameController.evaluateJavascript(source: jscr);
+    return _;
   }
 
   @override
