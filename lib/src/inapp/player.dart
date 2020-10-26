@@ -122,6 +122,21 @@ class VRPlayerController extends VRPlayerObserver {
   /// - Willow
   /// - XproII
   /// - Balance
+  /// - Amaro
+  /// - Ashby
+  /// - Charmes
+  /// - Crema
+  /// - Dogpatch
+  /// - Ginza
+  /// - Hefe
+  /// - Helena
+  /// - Juno
+  /// - Ludwig
+  /// - Poprocket
+  /// - Sierra
+  /// - Skyline
+  /// - Sutro
+  /// - Vesper
   ///
   /// Note: change balance with `buildBalanceFilter`
   /// Balance filter trys to reduce unwanted color from the media
