@@ -27,4 +27,19 @@ class MediaFilters {
   static const String Willow = "willow";
   static const String XproII = "xpro2";
   static const String Balance = "balance";
+  static const String Amaro = "amaro";
+  static const String Ashby = "ashby";
+  static const String Charmes = "charmes";
+  static const String Crema = "crema";
+  static const String Dogpatch = "dogpatch";
+  static const String Ginza = "ginza";
+  static const String Hefe = "hefe";
+  static const String Helena = "helena";
+  static const String Juno = "juno";
+  static const String Ludwig = "ludwig";
+  static const String Poprocket = "poprocket";
+  static const String Sierra = "sierra";
+  static const String Skyline = "skyline";
+  static const String Sutro = "sutro";
+  static const String Vesper = "vesper";
 }
