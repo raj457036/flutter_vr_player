@@ -161,7 +161,7 @@ class VRPlayerController extends VRPlayerObserver {
 
   void setMediaURL(String url) => _mediaUrl = url;
 
-  Future<void> buildPlayer({
+  Future<dynamic> buildPlayer({
     String url,
     bool enableVrButton,
     bool enableAutoPlay,
@@ -187,8 +187,9 @@ class VRPlayerController extends VRPlayerObserver {
     final jscr =
         "buildPlayer(url='$_url', vr_btn = $_vrButton, auto_play = $_autoPlay," +
             " loop = $_loop, debug = $_debug, muted = $_muted, debug_console = $_console, ios_perm = $_askIosMotionPermission);";
-    await _frameController.evaluateJavascript(source: jscr);
-    onBuild();
+    final _ = await _frameController.evaluateJavascript(source: jscr);
+    await Future.delayed(const Duration(milliseconds: 500), () => onBuild());
+    return _;
   }
 
   Future<void> setEventListener() async {
