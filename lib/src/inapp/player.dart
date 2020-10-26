@@ -340,6 +340,7 @@ class VRPlayer extends StatefulWidget {
   final Function(int) onPlayerLoading;
   final Function() onPlayerInit;
   final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
+  final AndroidMixedContentMode androidMixedContentMode;
 
   const VRPlayer({
     Key key,
@@ -347,6 +348,7 @@ class VRPlayer extends StatefulWidget {
     this.onPlayerLoading,
     this.onPlayerInit,
     this.gestureRecognizers,
+    this.androidMixedContentMode,
   })  : assert(controller != null),
         super(key: key);
 
@@ -381,6 +383,9 @@ class _VRPlayerState extends State<VRPlayer> {
           allowsLinkPreview: false,
           allowsPictureInPictureMediaPlayback: false,
           disallowOverScroll: true,
+        ),
+        android: AndroidInAppWebViewOptions(
+          mixedContentMode: widget.androidMixedContentMode,
         ),
       ),
       gestureRecognizers: widget.gestureRecognizers,
