@@ -394,6 +394,7 @@ class _VRPlayerState extends State<VRPlayer> {
         ),
         ios: IOSInAppWebViewOptions(
           allowsInlineMediaPlayback: true,
+          suppressesIncrementalRendering: true,
           enableViewportScale: true,
           allowsLinkPreview: false,
           allowsPictureInPictureMediaPlayback: false,
@@ -442,14 +443,6 @@ class _VRPlayerState extends State<VRPlayer> {
   void _onWebViewCreated(InAppWebViewController controller) {
     webView = controller;
     widget.controller._frameController = controller;
-    webView.addJavaScriptHandler(
-      handlerName: _eventHandler,
-      callback: (result) {
-        final _parsedMsg = json.decode(result.first);
-        final EventMessage message = EventMessage.fromJson(_parsedMsg);
-        widget.controller.triggerCallback(message);
-      },
-    );
   }
 
   void _onProgressChange(InAppWebViewController controller, int progress) {
@@ -459,6 +452,14 @@ class _VRPlayerState extends State<VRPlayer> {
   }
 
   void _onLoadStop(InAppWebViewController controller, String url) async {
+    webView.addJavaScriptHandler(
+      handlerName: _eventHandler,
+      callback: (result) {
+        final _parsedMsg = json.decode(result.first);
+        final EventMessage message = EventMessage.fromJson(_parsedMsg);
+        widget.controller.triggerCallback(message);
+      },
+    );
     await widget.controller.setEventListener();
     widget.controller._onReady();
   }

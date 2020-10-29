@@ -11,7 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_inappwebview:
+  flutter_inappwebview: ^4.0.0+4
 
 flutter:
   uses-material-design: true
