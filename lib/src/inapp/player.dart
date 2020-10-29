@@ -423,7 +423,6 @@ class _VRPlayerState extends State<VRPlayer> {
             //     disallowOverScroll: true,
             //   ),
             // ),
-
             gestureRecognizers: widget.gestureRecognizers,
             // onWebViewCreated: _onWebViewCreated,
             javascriptMode: JavascriptMode.unrestricted,
