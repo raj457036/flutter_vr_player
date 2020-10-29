@@ -50,7 +50,6 @@ class _MyAppState extends State<MyApp> {
         ),
         body: VRPlayer(
           controller: controller,
-          autoPlay: true,
           debugMode: true,
         ),
       ),

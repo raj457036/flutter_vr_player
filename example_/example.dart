@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:vr_player/vr_player.dart';
 
@@ -16,18 +14,26 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   VRPlayerController controller;
+  bool _loaded = false;
+  String _text = "";
 
   @override
   void initState() {
     super.initState();
     controller = VRPlayerController(
-      mediaUrl:
-          "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
+      autoPlay: true,
       onReady: () {
+        setState(() {
+          _loaded = true;
+        });
+      },
+      onBuild: () {
         controller.subscribeToAllEvents();
         controller.onEvent(MediaEvent.PROGRESS, () async {
           final progress = await controller.currentTime;
-          print("Progressed: $progress");
+          setState(() {
+            _text = "Time: $progress";
+          });
         });
       },
     );
@@ -43,25 +49,44 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('InAppWebView Example'),
+          title: const Text('VR PLAYER'),
         ),
-        body: ColorFiltered(
-          colorFilter: ColorFilter.matrix([
-            0.393, 0.769, 0.189, 0, 0, //
-            0.349, 0.686, 0.168, 0, 0, //
-            0.272, 0.534, 0.131, 0, 0, //
-            0, 0, 0, 1, 0, //
-          ]),
-          child: VRPlayer(
-            controller: controller,
-            autoPlay: false,
-            gestureRecognizers: Set()
-              ..add(Factory<TapGestureRecognizer>(() => TapGestureRecognizer()
-                ..onTapDown = (tap) {
-                  print(
-                      "This one prints ====================================================\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n");
-                })),
-          ),
+        body: Stack(
+          children: [
+            Positioned.fill(
+              child: VRPlayer(
+                controller: controller,
+              ),
+            ),
+            Positioned(
+              child: Text(
+                _text,
+                style: TextStyle(color: Colors.white),
+              ),
+              top: 10.0,
+              left: 0,
+              right: 0,
+            ),
+            Positioned(
+              bottom: 0,
+              left: 0,
+              right: 0,
+              child: RaisedButton(
+                onPressed: _loaded
+                    ? () async {
+                        controller.setMediaURL(
+                            "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8");
+                        await controller.buildPlayer();
+                      }
+                    : null,
+                child: _loaded
+                    ? Text("Load and Play")
+                    : CircularProgressIndicator(
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.grey),
+                      ),
+              ),
+            )
+          ],
         ),
       ),
     );

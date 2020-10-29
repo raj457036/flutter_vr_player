@@ -13,20 +13,70 @@ import '../vr_player_controller.dart';
 
 String _playerBaseUrl = "https://raj457036.github.io/webview_vr_player/Dev/?";
 
+const _eventHandler = "mediaEventMessage";
+
 class VRPlayerController extends VRPlayerObserver {
   String _mediaUrl;
+
+  /// vr toggle button on bottom right corner
+  final bool vrButton;
+
+  /// auto play video when player loads the media
+  final bool autoPlay;
+
+  /// play video in loop
+  final bool loop;
+
+  /// enable debugging
+  final bool debug;
+
+  /// create an interactive console over the player
+  final bool console;
+
+  /// mute the media by default
+  final bool muted;
+
+  /// ask for motion permssion on ios devices for sterioscopic view
+  final bool askIosMotionPermission;
 
   Map<int, VoidCallback> _eventMap = {};
 
   WebViewController _frameController;
-  final VoidCallback _onReady;
-  final VoidCallback _onCreate;
 
-  VRPlayerController(
-      {VoidCallback onReady, VoidCallback onCreate, @required String mediaUrl})
-      : _mediaUrl = mediaUrl,
-        _onCreate = onCreate,
-        _onReady = onReady;
+  /// triggers when player preprocesses are completed
+  final VoidCallback onReady;
+
+  /// triggers when player is build
+  /// tip: subscribe to events here.
+  final VoidCallback onBuild;
+
+  VRPlayerController({
+    this.onReady,
+    this.onBuild,
+    String mediaUrl,
+    this.vrButton = false,
+    this.autoPlay = true,
+    this.loop = false,
+    this.debug = false,
+    this.console = false,
+    this.muted = true,
+    this.askIosMotionPermission = false,
+  })  : assert(
+          vrButton != null &&
+              autoPlay != null &&
+              loop != null &&
+              debug != null &&
+              console != null &&
+              muted != null &&
+              askIosMotionPermission != null,
+        ),
+        _mediaUrl = mediaUrl;
+
+  void _onReady() {
+    if (onReady != null) {
+      onReady();
+    }
+  }
 
   // media filters
 
@@ -74,6 +124,21 @@ class VRPlayerController extends VRPlayerObserver {
   /// - Willow
   /// - XproII
   /// - Balance
+  /// - Amaro
+  /// - Ashby
+  /// - Charmes
+  /// - Crema
+  /// - Dogpatch
+  /// - Ginza
+  /// - Hefe
+  /// - Helena
+  /// - Juno
+  /// - Ludwig
+  /// - Poprocket
+  /// - Sierra
+  /// - Skyline
+  /// - Sutro
+  /// - Vesper
   ///
   /// Note: change balance with `buildBalanceFilter`
   /// Balance filter trys to reduce unwanted color from the media
@@ -109,6 +174,47 @@ class VRPlayerController extends VRPlayerObserver {
   seek(num byTime) {
     final jscr = "mediaController.seek($byTime);";
     _frameController.evaluateJavascript(jscr);
+  }
+
+  void setMediaURL(String url) => _mediaUrl = url;
+
+  Future<dynamic> buildPlayer({
+    String url,
+    bool enableVrButton,
+    bool enableAutoPlay,
+    bool enableLoop,
+    bool enableDebug,
+    bool enableConsole,
+    bool enableMuted,
+    bool enableAskIosMotionPermission,
+  }) async {
+    assert((url ?? _mediaUrl) != null,
+        "Cannot build player without an actual url.");
+
+    final String _url = url ?? _mediaUrl;
+    final bool _vrButton = enableVrButton ?? vrButton,
+        _autoPlay = enableAutoPlay ?? autoPlay,
+        _loop = enableLoop ?? loop,
+        _debug = enableDebug ?? debug,
+        _console = enableConsole ?? console,
+        _muted = enableMuted ?? muted,
+        _askIosMotionPermission =
+            enableAskIosMotionPermission ?? askIosMotionPermission;
+
+    final jscr =
+        "buildPlayer(url='$_url', vr_btn = $_vrButton, auto_play = $_autoPlay," +
+            " loop = $_loop, debug = $_debug, muted = $_muted, debug_console = $_console, ios_perm = $_askIosMotionPermission);";
+    final _ = await _frameController.evaluateJavascript(jscr);
+    await Future.delayed(const Duration(milliseconds: 500), () => onBuild());
+    return _;
+  }
+
+  Future<void> setEventListener() async {
+    final jsrc = """setTimeout(
+              function() { 
+                MediaMessageChannel.postMessage = (msg) => window.flutter_inappwebview.callHandler('$_eventHandler', msg);
+              }, 1000);""";
+    await _frameController.evaluateJavascript(jsrc);
   }
 
   Future<void> setCurrentTime(double setTime) async {
@@ -153,7 +259,7 @@ class VRPlayerController extends VRPlayerObserver {
 
   Future<num> get currentTime async {
     final jscr = "mediaController.currentTime();";
-    return await _frameController.evaluateJavascript(jscr) as num;
+    return num.tryParse(await _frameController.evaluateJavascript(jscr));
   }
 
   Future<num> get playbackRate async {
@@ -161,29 +267,29 @@ class VRPlayerController extends VRPlayerObserver {
     return await _frameController.evaluateJavascript(jscr) as num;
   }
 
-  int get readyState {
+  Future get readyState {
     final jscr = "mediaController.state;";
-    return _frameController.evaluateJavascript(jscr) as int;
+    return _frameController.evaluateJavascript(jscr);
   }
 
-  bool get isPaused {
+  Future get isPaused {
     final jscr = "mediaController.paused;";
-    return _frameController.evaluateJavascript(jscr) as bool;
+    return _frameController.evaluateJavascript(jscr);
   }
 
-  num get duration {
+  Future get duration {
     final jscr = "mediaController.duration;";
-    return _frameController.evaluateJavascript(jscr) as num;
+    return _frameController.evaluateJavascript(jscr);
   }
 
-  num get volume {
+  Future get volume {
     final jscr = "mediaController.volume;";
-    return _frameController.evaluateJavascript(jscr) as num;
+    return _frameController.evaluateJavascript(jscr);
   }
 
-  bool get isMuted {
+  Future get isMuted {
     final jscr = "mediaController.isMuted;";
-    return _frameController.evaluateJavascript(jscr) as bool;
+    return _frameController.evaluateJavascript(jscr);
   }
 
   // Event Management
@@ -193,14 +299,18 @@ class VRPlayerController extends VRPlayerObserver {
     return events;
   }
 
-  void switchToFlatView({bool fullScreen = false}) {
-    final jscr = "mediaController.viewInFlat($fullScreen);";
-    _frameController.evaluateJavascript(jscr);
+  Future<dynamic> switchToFlatView(
+      {bool fullScreen = false, bool fillMode = false}) async {
+    final jscr =
+        "mediaController.togglePlayer(true, ${fullScreen ? 1 : 0}, $fillMode);";
+    final _ = await _frameController.evaluateJavascript(jscr);
+    return _;
   }
 
-  void switchToMonoView() {
-    final jscr = "mediaController.viewInMono();";
-    _frameController.evaluateJavascript(jscr);
+  Future<dynamic> switchToMonoView() async {
+    final jscr = "mediaController.togglePlayer(false, 0, false);";
+    final _ = await _frameController.evaluateJavascript(jscr);
+    return _;
   }
 
   @override
@@ -247,8 +357,6 @@ class VRPlayer extends StatefulWidget {
   final Function(int) onPlayerLoading;
   final Function() onPlayerInit;
   final bool debugMode;
-  final bool showVRBtn;
-  final bool autoPlay;
   final Set<Factory<OneSequenceGestureRecognizer>> gestureRecognizers;
 
   const VRPlayer({
@@ -256,14 +364,9 @@ class VRPlayer extends StatefulWidget {
     @required this.controller,
     this.onPlayerLoading,
     this.onPlayerInit,
-    this.debugMode = false,
-    this.showVRBtn = false,
-    this.autoPlay = true,
     this.gestureRecognizers,
+    this.debugMode = false,
   })  : assert(controller != null),
-        assert(debugMode != null),
-        assert(showVRBtn != null),
-        assert(autoPlay != null),
         super(key: key);
 
   static void changePlayerHost(String playerURL) {
@@ -330,8 +433,6 @@ class _VRPlayerState extends State<VRPlayer> {
                 widget.controller._frameController = _;
               });
               _.clearCache();
-              if (widget.controller._onCreate != null)
-                widget.controller._onCreate();
             },
             // onLoadStart: _onLoadStart,
             // onLoadStop: _onLoadStop,
@@ -354,17 +455,18 @@ class _VRPlayerState extends State<VRPlayer> {
     String base = _playerBaseUrl;
 
     final mediaLink = widget.controller.mediaLink;
+
     if (mediaLink != null) {
       base += "video=$mediaLink&";
     }
-    if (!widget.showVRBtn) {
+    if (!widget.controller.vrButton) {
       base += "VRBtn=false&";
     }
-    if (!widget.autoPlay) {
+    if (!widget.controller.autoPlay) {
       base += "autoPlay=false&";
     }
 
-    if (widget.debugMode) {
+    if (widget.controller.debug) {
       base += "debug=true&";
     }
     return base;
