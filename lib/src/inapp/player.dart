@@ -212,8 +212,8 @@ class VRPlayerController extends VRPlayerObserver {
   Future<void> setEventListener() async {
     final jsrc = """setTimeout(
               function() { 
-                MediaMessageChannel.postMessage = (msg) => window.flutter_inappwebview.callHandler('$_eventHandler', msg);
-              }, 1000);""";
+                 MediaMessageChannel.postMessage = (msg) => $_eventHandler.postMessage(msg);
+              }, 500);""";
     await _frameController.evaluateJavascript(jsrc);
   }
 
@@ -475,7 +475,7 @@ class _VRPlayerState extends State<VRPlayer> {
   Set<JavascriptChannel> getJsChannels() {
     return [
       JavascriptChannel(
-        name: "mediaEventMessage",
+        name: _eventHandler,
         onMessageReceived: (result) {
           try {
             final _parsedMsg = json.decode(result.message);
@@ -507,9 +507,7 @@ class _VRPlayerState extends State<VRPlayer> {
   // }
 
   void _onLoadStop(String url) async {
-    final jsrc =
-        "MediaMessageChannel.postMessage = mediaEventMessage.postMessage;";
-    await webView.evaluateJavascript(jsrc);
+    await widget.controller.setEventListener();
     if (widget.controller._onReady != null) widget.controller._onReady();
   }
 
