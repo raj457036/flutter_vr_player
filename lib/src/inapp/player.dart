@@ -314,29 +314,29 @@ class VRPlayerController extends VRPlayerObserver {
   }
 
   @override
-  void subscribeTo(List<int> mediaEvents) {
+  Future<void> subscribeTo(List<int> mediaEvents) async {
     final events = _getEvents(mediaEvents);
     final jscr = "mediaController.subscribe($events);";
-    _frameController.evaluateJavascript(jscr);
+    await _frameController.evaluateJavascript(jscr);
   }
 
   @override
-  void subscribeToAllEvents() {
+  Future<void> subscribeToAllEvents() async {
     const jscr = "mediaController.subscribeToAllEvents();";
-    _frameController.evaluateJavascript(jscr);
+    await _frameController.evaluateJavascript(jscr);
   }
 
   @override
-  void unSubscribeFromAllEvents() {
+  Future<void> unSubscribeFromAllEvents() async {
     const jscr = "mediaController.unSubscribeFromAllEvents();";
-    _frameController.evaluateJavascript(jscr);
+    await _frameController.evaluateJavascript(jscr);
   }
 
   @override
-  void unSubscribeFrom(List<int> mediaEvents) {
+  Future<void> unSubscribeFrom(List<int> mediaEvents) async {
     final events = _getEvents(mediaEvents);
     final jscr = "mediaController.unsubscribe($events);";
-    _frameController.evaluateJavascript(jscr);
+    await _frameController.evaluateJavascript(jscr);
   }
 
   @override
@@ -475,13 +475,15 @@ class _VRPlayerState extends State<VRPlayer> {
   Set<JavascriptChannel> getJsChannels() {
     return [
       JavascriptChannel(
-        name: "MediaEventMessage",
+        name: "mediaEventMessage",
         onMessageReceived: (result) {
-          final _parsedMsg = json.decode(result.message);
-          final EventMessage message = EventMessage.fromJson(_parsedMsg);
-          widget.controller.triggerCallback(message);
+          try {
+            final _parsedMsg = json.decode(result.message);
+            final EventMessage message = EventMessage.fromJson(_parsedMsg);
+            widget.controller.triggerCallback(message);
+          } catch (e) {}
         },
-      ),
+      )
     ].toSet();
   }
 
@@ -505,10 +507,8 @@ class _VRPlayerState extends State<VRPlayer> {
   // }
 
   void _onLoadStop(String url) async {
-    final jsrc = """setTimeout(
-              function() { 
-                MediaMessageChannel.postMessage = MediaEventMessage.postMessage; 
-              }, 1000);""";
+    final jsrc =
+        "MediaMessageChannel.postMessage = mediaEventMessage.postMessage;";
     await webView.evaluateJavascript(jsrc);
     if (widget.controller._onReady != null) widget.controller._onReady();
   }
