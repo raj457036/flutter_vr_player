@@ -11,7 +11,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  webview_flutter: ^1.0.5
+  # webview_flutter: ^1.0.5
+  webview_flutter:
+    git:
+      url: https://github.com/alexmarkley/plugins.git
+      ref: inline-media-behavior
+      path: packages/webview_flutter
+
   device_info: ^0.4.2+8
 
 flutter:

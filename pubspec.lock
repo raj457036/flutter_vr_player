@@ -70,10 +70,12 @@ packages:
   webview_flutter:
     dependency: "direct main"
     description:
-      name: webview_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.5"
+      path: "packages/webview_flutter"
+      ref: inline-media-behavior
+      resolved-ref: cec2cf8132139f526f153df5c8ae0a06969eb7b4
+      url: "https://github.com/alexmarkley/plugins.git"
+    source: git
+    version: "1.0.0+1"
 sdks:
   dart: ">=2.10.0-110 <2.11.0"
   flutter: ">=1.22.0 <2.0.0"
