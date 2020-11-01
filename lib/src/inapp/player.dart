@@ -407,6 +407,7 @@ class _VRPlayerState extends State<VRPlayer> {
         : WebView(
             initialUrl: _buildInitalUrl(),
             // initialHeaders: {},
+
             gestureNavigationEnabled: false,
             initialMediaPlaybackPolicy: AutoMediaPlaybackPolicy.always_allow,
             // initialOptions: InAppWebViewGroupOptions(

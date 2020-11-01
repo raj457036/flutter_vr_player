@@ -71,11 +71,11 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/webview_flutter"
-      ref: inline-media-behavior
-      resolved-ref: cec2cf8132139f526f153df5c8ae0a06969eb7b4
-      url: "https://github.com/alexmarkley/plugins.git"
+      ref: HEAD
+      resolved-ref: e8c35918a120bca23a49b3ede9fb4a1f15433284
+      url: "git@github.com:raj457036/plugins.git"
     source: git
-    version: "1.0.0+1"
+    version: "1.0.5"
 sdks:
   dart: ">=2.10.0-110 <2.11.0"
   flutter: ">=1.22.0 <2.0.0"
