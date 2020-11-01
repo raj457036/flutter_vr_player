@@ -73,7 +73,7 @@ packages:
       path: "packages/webview_flutter"
       ref: HEAD
       resolved-ref: e8c35918a120bca23a49b3ede9fb4a1f15433284
-      url: "git@github.com:raj457036/plugins.git"
+      url: "https://github.com/raj457036/plugins.git"
     source: git
     version: "1.0.5"
 sdks:
