@@ -14,7 +14,7 @@ dependencies:
   # webview_flutter: ^1.0.5
   webview_flutter:
     git:
-      url: git@github.com:raj457036/plugins.git
+      url: https://github.com/raj457036/plugins.git
       path: packages/webview_flutter
 
   device_info: ^0.4.2+8
