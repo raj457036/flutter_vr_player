@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:vr_player/vr_player.dart';
 
@@ -13,7 +14,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  VRPlayerController controller;
+  late final VRPlayerController controller;
   bool _loaded = false;
   String _text = "";
 
